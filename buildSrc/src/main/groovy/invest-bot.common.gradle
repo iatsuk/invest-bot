@@ -1,0 +1,62 @@
+/*
+  Copyright 2021 Andrei Iatsuk
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ */
+plugins {
+    id 'scala'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext.scalaVersion = '2.13'
+ext.scalaTestVersion = "3.2.6"
+ext.circeVersion = "0.12.3"
+
+ext.libraries = [
+        pdf_utils : [
+                'io.github.jonathanlink:PDFLayoutTextStripper:2.2.3',
+                'org.apache.pdfbox:pdfbox-tools:2.0.22'
+        ],
+        json_utils: [
+                "io.circe:circe-core_${scalaVersion}:${circeVersion}",
+                "io.circe:circe-generic_${scalaVersion}:${circeVersion}",
+                "io.circe:circe-parser_${scalaVersion}:${circeVersion}"
+        ],
+        net       : [
+                "net.ruippeixotog:scala-scraper_${scalaVersion}:2.2.0"
+        ],
+        lang      : [
+                "com.chuusai:shapeless_${scalaVersion}:2.3.3",
+                "org.scala-lang:scala-library:${scalaVersion}.5",
+                "org.reflections:reflections:0.9.12"
+        ],
+        lang_tests: [
+                "org.scalactic:scalactic_${scalaVersion}:${scalaTestVersion}",
+                "org.scalatest:scalatest_${scalaVersion}:${scalaTestVersion}"
+        ]
+]
+
+dependencies {
+    implementation libraries.lang
+
+    testImplementation libraries.lang_tests
+}
+
+task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+    main = 'org.scalatest.tools.Runner'
+    args = ['-R', 'build/classes/scala/test', '-o']
+    classpath = sourceSets.test.runtimeClasspath
+}

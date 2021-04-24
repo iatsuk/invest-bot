@@ -1,1 +1,1 @@
-# invest-pot
+# invest-bot

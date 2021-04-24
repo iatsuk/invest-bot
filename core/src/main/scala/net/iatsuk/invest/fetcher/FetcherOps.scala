@@ -17,9 +17,19 @@ package net.iatsuk.invest.fetcher
 
 import net.iatsuk.invest.Context
 
+/**
+ * Fetcher get data from stock exchange and synchronize it with [[net.iatsuk.invest.storage.StorageOps]] provided
+ * by [[Context]].
+ */
 trait FetcherOps {
 
+  /**
+   * Run fetcher.
+   */
   def sync()(implicit ctx: Context): Unit
 
+  /**
+   * Stop fetcher work.
+   */
   def stop(): Unit
 }

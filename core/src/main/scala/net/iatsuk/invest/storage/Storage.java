@@ -15,14 +15,23 @@
  */
 package net.iatsuk.invest.storage;
 
+import net.iatsuk.invest.Context;
+import net.iatsuk.invest.fetcher.FetcherOps;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for {@link StorageOps} implementations.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Storage {
 
+    /**
+     * Name of fetcher implementation for {@link Context#STORAGE_PROVIDER()}.
+     */
     String name();
 }

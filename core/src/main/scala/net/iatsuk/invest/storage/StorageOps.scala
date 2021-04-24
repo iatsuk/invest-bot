@@ -17,15 +17,37 @@ package net.iatsuk.invest.storage
 
 import net.iatsuk.invest.Context
 
+/**
+ * Key valued storage DAO.
+ */
 trait StorageOps {
 
+  /**
+   * @return all persisted keys in storage.
+   */
   def keys(implicit ctx: Context): Set[Array[Byte]]
 
+  /**
+   * Put new data into storage. If key exists it will be override.
+   *
+   * @return [[Unit]] if success or [[Throwable]].
+   */
   def put(key: Array[Byte], value: Array[Byte])(implicit ctx: Context): Either[Throwable, Unit]
 
+  /**
+   * @return data by key or [[Throwable]] instance.
+   */
   def get(key: Array[Byte])(implicit ctx: Context): Either[Throwable, Array[Byte]]
 
+  /**
+   * Remove data from storage by key.
+   *
+   * @return remove boolean status or [[Throwable]] in case of error.
+   */
   def remove(key: Array[Byte])(implicit ctx: Context): Either[Throwable, Boolean]
 
+  /**
+   * Close connection to storage.
+   */
   def close(): Unit
 }

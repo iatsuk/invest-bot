@@ -23,8 +23,12 @@ import net.iatsuk.invest.fetcher.{Fetcher, FetcherOps}
 import net.iatsuk.invest.storage.{Storage, StorageOps}
 import org.reflections.Reflections
 
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
+/**
+ * Service Locator that bind parts of the project to each other.
+ */
 class Context {
 
   private val storageProviders: mutable.HashMap[String, String] = new mutable.HashMap()
@@ -73,7 +77,9 @@ class Context {
 
   private def registerStorages(): Unit = {
     val ref = new Reflections(getClass.getPackage.getName)
-    ref.getTypesAnnotatedWith(classOf[Storage]).forEach { cl =>
+    ref.getTypesAnnotatedWith(classOf[Storage]).asScala
+      .filter(_.getInterfaces.toSet.contains(classOf[StorageOps]))
+      .foreach { cl =>
       val findable = cl.getAnnotation(classOf[Storage])
       println(f"Found storage '${findable.name()}' in '${cl.getName}'")
       storageProviders.put(findable.name(), cl.getName)
@@ -82,7 +88,9 @@ class Context {
 
   private def registerFetchers(): Unit = {
     val ref = new Reflections(getClass.getPackage.getName)
-    ref.getTypesAnnotatedWith(classOf[Fetcher]).forEach { cl =>
+    ref.getTypesAnnotatedWith(classOf[Fetcher]).asScala
+      .filter(_.getInterfaces.toSet.contains(classOf[FetcherOps]))
+      .foreach { cl =>
       val findable = cl.getAnnotation(classOf[Fetcher])
       println(f"Found fetcher '${findable.name()}' in '${cl.getName}'")
       fetcherProviders.put(findable.name(), cl.getName)
